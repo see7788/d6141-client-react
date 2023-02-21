@@ -1,0 +1,112 @@
+.app4-sayle-a-base {
+	height: 100vh;
+	background: #fafbfd;
+}
+.app4-sayle-a-base > .navBar {
+	position: relative;
+	text-align: center;
+	padding: 12px;
+	font-size: 16px;
+	font-weight: 600;
+	background: #d8d8d7;
+	border-bottom: 1px solid #97989a;
+}
+.navBar > .collect-btn {
+	position: absolute;
+	right: 12px;
+	top: 12px;
+	font-size: 26px;
+	height: 26px;
+}
+.app4-sayle-a-base > .floor-tabs-box {
+	display: flex;
+	justify-content: space-between;
+	padding: 0 12px;
+	align-items: center;
+	border-bottom: 1px solid #e9e9ec;
+}
+.adm-tabs-tab-line {
+	background: #5cac96;
+}
+.adm-tabs-tab-active {
+	color: #5cac96;
+}
+.gender-selection-box {
+	display: flex;
+	justify-content: center;
+	padding: 18px 0;
+}
+.adm-radio {
+	padding: 0 20px;
+	--icon-size: 18px;
+	--font-size: 14px;
+	--gap: 6px;
+}
+.info-item-list {
+	padding: 0 20px;
+}
+.info-item-list > .info-item {
+	margin-top: 20px;
+	background: #fff;
+	padding: 10px;
+}
+.info-item > .item-titile-status {
+	display: flex;
+	justify-content: space-between;
+}
+
+.info-item > .item-detail {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.item-detail .detail-num {
+	font-size: 18px;
+	padding-left: 10px;
+	font-weight: 600;
+}
+/* 已满 */
+.item-titile-status .full {
+	color: #ca6241;
+	position: relative;
+}
+.item-titile-status .full::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -50px;
+	width: 40px;
+	height: 18px;
+	border-radius: 4px;
+	background: linear-gradient(90deg, #ca6241, #f4cec8);
+}
+/* 空闲*/
+.item-titile-status .leisure {
+	color: #d4a94a;
+	position: relative;
+}
+.item-titile-status .leisure::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -50px;
+	width: 40px;
+	height: 18px;
+	border-radius: 4px;
+	background: linear-gradient(90deg, #d4a94a, #fcecd1);
+}
+/* 无人 */
+.item-titile-status .unmanned {
+	color: #6ce5cc;
+	position: relative;
+}
+.item-titile-status .unmanned::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -50px;
+	width: 40px;
+	height: 18px;
+	border-radius: 4px;
+	background: linear-gradient(90deg, #6ce5cc, #d1fbf7);
+}

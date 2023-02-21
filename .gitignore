@@ -1,0 +1,4 @@
+.pio
+.vscode/
+**/node_modules/**
+/d6141-client-react**/
