@@ -1,16 +1,14 @@
-import { name } from "./package.json"
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from "path"
 export default defineConfig((param) => {
   const isBuild = param.command === "build"
   const site = param.mode;
-  const packageName = name
   const cwdPath = process.cwd()
   const sitePath=path.resolve(cwdPath, site)
-  const buildToPath= path.resolve(cwdPath, `${packageName}-${site}-build`)
+  const buildToPath= path.resolve(cwdPath, `${site}-build`)
   const indexHtmlPath=path.resolve(sitePath, "index.html")
-  console.log({isBuild,site,packageName,cwdPath,sitePath,buildToPath,indexHtmlPath})
+  console.log({isBuild,site,cwdPath,sitePath,buildToPath,indexHtmlPath})
   return {
     root: sitePath,
     plugins: [

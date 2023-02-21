@@ -20,6 +20,7 @@
     "antd": "^5.2.1",
     "antd-mobile": "^5.28.0",
     "antd-mobile-icons": "^0.3.0",
+    "d6141-lib-react-usewebserial": "workspace:^0.0.3",
     "js-cookie": "^3.0.1",
     "lodash": "^4.17.21",
     "mobz": "^0.21.0",
