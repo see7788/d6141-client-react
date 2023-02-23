@@ -1,5 +1,5 @@
 import React, { FC, Suspense, lazy, useEffect, useState } from 'react';
-import { BrowserRouter, Route, Routes, Link, Navigate } from 'react-router-dom';
+import { Route,Link } from 'react-router-dom';
 import { Space, Layout } from 'antd';
 import useUrlFrom from '../mcu-fc/Component/ws-init/useWsUriToker';
 const QrCard = lazy(() => import('../mcu-fc/Component/ws-init/QrCard'))
@@ -21,7 +21,7 @@ const headerStyle: React.CSSProperties = {
 };
 const App: FC = () => {
   const { Header, Content } = Layout;
-  const { tokerMsg, qrUrl } = useUrlFrom( )
+  const { tokerMsg, qrUrl } = useUrlFrom()
   const Index = () => tokerMsg === "" ? <QrCard qrUrl={qrUrl()} /> : <>{tokerMsg}</>
   const pages = { Index, EspState, GlobalConfig };
   const Btns = Object.keys(pages).map((name, i) => (
@@ -37,23 +37,19 @@ const App: FC = () => {
     </Layout>
   )
   return (
-    <BrowserRouter>
-      <Suspense fallback={<h2>Loading..</h2>}>
-        <Routes>
-          {
-            Object.entries(pages).map(([name, Ui]) => (
-              <Route
-                key={name}
-                path={`/${name}`}
-                element={<RouterPage><Ui /></RouterPage>}
-              />
-            ))
-          }
-          <Route path={"*"} element={tokerMsg ? <>{tokerMsg}</> : <RouterPage><Index /></RouterPage>} />
-        </Routes>
-      </Suspense>
-    </BrowserRouter >
+    <>
+      {
+        Object.entries(pages).map(([name, Ui]) => (
+          <Route
+            key={name}
+            path={`${name}`}
+            element={<RouterPage><Ui /></RouterPage>}
+          />
+        ))
+      }
+      <Route index element={tokerMsg ? <>{tokerMsg}</> : <RouterPage><Index /></RouterPage>} />
+      <Route path={"*"} element={tokerMsg ? <>{tokerMsg}</> : <RouterPage><Index /></RouterPage>} />
+    </>
   )
 }
 export default App
-// export default ()=><>123</>
