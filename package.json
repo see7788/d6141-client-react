@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0",
     "dev:mcu-spiffs": "vite --mode mcu-spiffs --host 0.0.0.0",
     "build:mcu-spiffs": "tsc && vite build --mode mcu-spiffs",
     "dev:mcu-websocket": "vite --mode mcu-websocket --host 0.0.0.0",
