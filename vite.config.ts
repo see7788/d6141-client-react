@@ -5,10 +5,10 @@ export default defineConfig((param) => {
   const isBuild = param.command === "build"
   const site = param.mode;
   const cwdPath = process.cwd()
-  const sitePath=path.resolve(cwdPath, site)
-  const buildToPath= path.resolve(cwdPath, `${site}-build`)
-  const indexHtmlPath=path.resolve(sitePath, "index.html")
-  console.log({isBuild,site,cwdPath,sitePath,buildToPath,indexHtmlPath})
+  const sitePath = path.resolve(cwdPath, site)
+  const buildToPath = path.resolve(cwdPath, `${site}-build`)
+  const indexHtmlPath = path.resolve(sitePath, "index.html")
+  console.log({ isBuild, site, cwdPath, sitePath, buildToPath, indexHtmlPath })
   return {
     root: sitePath,
     plugins: [

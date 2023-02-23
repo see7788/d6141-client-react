@@ -1,15 +1,15 @@
 import React, { FC, Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
-import Route from "./Route"
-import { Routes, BrowserRouter } from "react-router-dom";
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <React.StrictMode>
-         <BrowserRouter>
-            <Suspense fallback={<h2>Loading..</h2>}>
-                <Routes>
-                    <Route />
-                </Routes>
-            </Suspense>
-        </BrowserRouter>
-    </React.StrictMode>
+import { Routes, Route, Outlet, Router, BrowserRouter } from "react-router-dom";
+import Pages from "./Routers"
+ReactDOM.createRoot(
+	document.getElementById('root') as HTMLElement
+).render(
+	<Suspense fallback={<>Loading..</>}>
+		<React.StrictMode>
+			<BrowserRouter>
+				<Pages />
+			</BrowserRouter>
+		</React.StrictMode>
+	</Suspense>
 )

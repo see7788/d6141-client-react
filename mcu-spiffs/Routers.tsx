@@ -1,6 +1,7 @@
 import React, { FC, Suspense, lazy, useEffect, useState } from 'react';
-import useUrlFrom from '../mcu-fc/Component/ws-init/useWsUriToker';
-const QrCard = lazy(() => import('../mcu-fc/Component/ws-init/QrCard'))
+import useUrlFrom from '../mcu-websocket/src/Component/ws-init/useWsUriToker';
+import { Routes, Route } from "react-router-dom";
+const QrCard = lazy(() => import("../mcu-websocket/src/Component/ws-init/QrCard"))
 
 // import VConsole from 'vconsole';
 // https://m.tb.cn/h.UM0j2vD?tk=tUtOdS6uVB2
@@ -12,17 +13,21 @@ const QrCard = lazy(() => import('../mcu-fc/Component/ws-init/QrCard'))
 // new VConsole();
 // vConsole.destroy();//关闭
 const App: FC = () => {
-  const { tokerMsg, qrUrl} = useUrlFrom("","wsUri=ws://192.168.110.119/ws")
+  const { tokerMsg, qrUrl } = useUrlFrom("", "wsUri=ws://192.168.110.119/ws")
   return (
-    <Suspense fallback={<h2>Loading..</h2>}>
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
-        {tokerMsg || <QrCard qrUrl={qrUrl()} />}
-      </div>
-    </Suspense>
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      {tokerMsg || <QrCard qrUrl={qrUrl()} />}
+    </div>
   )
 }
-export default App
+
+export default () => (
+  <Routes>
+    <Route path='*' element={<App />}></Route>
+    <Route path='/22' element={<>***2222*****</>}></Route>
+  </Routes>
+)
