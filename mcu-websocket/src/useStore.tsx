@@ -2,6 +2,7 @@ import globalConfig from "../../globalConfig.json"
 import { immer } from 'zustand/middleware/immer'
 import { create } from "zustand"
 import _ from "lodash"
+type PowerPartial<T> = { [U in keyof T]?: T[U] extends object ? PowerPartial<T[U]> : T[U]; }
 
 /*
 switch (ws.readyState) {
@@ -19,78 +20,94 @@ switch (ws.readyState) {
 let ws: WebSocket;
 export const YblUseDoType = ["坑门锁"] as const;
 export type YblUseDoType = (typeof YblUseDoType)[number];
-/**
- * [state,id,autoAddress,YblUseDoType]
- */
-type UartYbl = {
-    state: {
-        [i: string]: YblState_IdInfo
-    };
+type UartYblstate = {
+    [i: string]: [
+        boolean, //状态
+        number, //位置序号
+        YblUseDoType?
+    ]
 }
-type YblState_IdInfo = [
-    boolean, //state
-    number, //autoAddress 序号
-    YblUseDoType?
-]
-type Uri = `${"ws://" | "wss://"}${string}`
-export type GlobalConfig = typeof globalConfig & { uartYbl: UartYbl };
-type Api = "globalConfig_get" | "globalConfig_set"
+export type GlobalConfig = {
+    uartYbl: { state: UartYblstate };
+    fangjian: {
+        nowNum?: number,
+        kenNum?: number
+    } & (typeof globalConfig)
+};
+//espState: Record<string, Record<string, string>>;
 export type Store = {
-    ipcInit: (uri: Uri) => Promise<any>;
+    reqInit: {
+        wsInit: (wsuri: `${"ws://" | "wss://"}${string}`) => Promise<true>;
+    }
     globalConfig: GlobalConfig;
-    espState: Record<string, Record<string, string>>;
-    api: (api: Api) => Promise<void>;
+    req: (
+        api?: "globalConfig_get" | "globalConfig_set" | "api_espRestart" | "api_globalConfig_fromFile" | "api_globalConfig_toFile",
+        globalConfig?: PowerPartial<GlobalConfig>
+    ) => Promise<void>;
 }
 
 export default create<Store>()(immer<Store>((set, self) => {
-    const ipcInit: Store['ipcInit'] = async (c) => {
-        if (!c) {
-            c = "ws://" + globalConfig.wifiAp.staticIp.join(".") + globalConfig.locServer.port + globalConfig.locServer.webSocketPath as Uri
-        }
-        if (c.indexOf("192.168.") > -1) {
-            ws = new WebSocket(c);
-            ws.onopen = e => console.log(e)
-            ws.onmessage = (e) => {
-                const str = e.data
-                const { api, ...info } = JSON.parse(str);
-                let webuseing = false;
-                switch (api) {
-                    case "globalConfig":
-                        set(s => {
-                            s[api] = info[api]
-                        });
-                        webuseing = true;
-                        break;
-                    case "fangjianState":
-                        set(s => {
-                            if (s.globalConfig?.uartYbl?.state)
-                                s.globalConfig.uartYbl.state = info["uartYblState"];
-                        })
-                        webuseing = true;
-                        break;
+    const res = ({ api, info }: { api: string, info: any }) => {
+        let webuseing = true;
+        switch (api) {
+            case "globalConfig":
+                set(s => {
+                    s.globalConfig = info
+                });
+                break;
+            case "fangjianState":
+                const { uartYblState, ...fj } = info as GlobalConfig["fangjian"] & {
+                    uartYblState: UartYblstate,
+                    nowNum: number,
+                    kenNum: number
                 }
-                console.log({ webuseing, api, info })
-            };
-            ws.onclose = c => console.error("ws.onclose", c);
-        } else {
-            console.error("onInit 错误")
+                set(s => {
+                    s.globalConfig.uartYbl.state = uartYblState;
+                    s.globalConfig.fangjian = fj;
+                })
+                break;
+            default:
+                webuseing = false;
+        }
+        console.log({ webuseing, api, info })
+    }
+    const wsReq: Store['req'] = async (api, globalConfig) => {
+        if (api && globalConfig) {
+            set(s => {
+                s.globalConfig = _.merge(s.globalConfig, globalConfig);
+                ws.send(JSON.stringify({ globalConfig: s.globalConfig, api }));
+            })
+        } else if (api) {
+            ws.send(JSON.stringify({ api }));
+        } else if (globalConfig) {
+            set(s => {
+                s.globalConfig = _.merge(s.globalConfig, globalConfig);
+            })
         }
     }
+
+    const wsInit: Store['reqInit']["wsInit"] = c => new Promise((ok) => {
+        ws = new WebSocket(c);
+        ws.onopen = e => {
+            const loop = setInterval(() => {
+                if (ws.readyState === 1) {
+                    ok(true);
+                    clearInterval(loop)
+                }
+            }, 1000);
+            console.log(e)
+        }
+        ws.onmessage = (e) => {
+            res(JSON.parse(e.data))
+        };
+        ws.onclose = e => {
+            console.error("ws.onclose", e);
+            wsInit(c)
+        }
+    })
     return {
-        ipcInit,
+        reqInit: { wsInit },
         globalConfig: {} as GlobalConfig,
-        espState: {},
-        api: async api => {
-            let db: any;
-            switch (api) {
-                case "globalConfig_set":
-                    db = { ...self().globalConfig, api }
-                    break;
-                default:
-                    db = { api }
-            }
-            ws.send(JSON.stringify(db));
-        }
+        req: wsReq
     }
-})
-)
+}))

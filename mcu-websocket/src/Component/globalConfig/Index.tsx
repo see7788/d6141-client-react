@@ -1,9 +1,9 @@
 import React, { FC, useEffect, } from 'react';
 import store from "../../useStore";
 import FangJian from "./FangJian";
-import WiFi from "./WiFi";
+import WiFi from "./WiFiSta";
 import UartYbl from "./UartYbl";
-import WebServer from "./CommunicationServer";
+import WebServer from "./LocServer";
 import InternetServer from "./InternetServer";
 import { Divider, Space, Button } from 'antd';
 const Ui: FC = () => {

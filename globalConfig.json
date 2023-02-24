@@ -1,7 +1,7 @@
 {
   "fangjian": {
     "id": 1,
-    "doorName": "",
+    "doorName": "testname",
     "doorType": "boy",
     "doorFloor": 0
   },
@@ -29,7 +29,7 @@
     "stateAgainstIds": [],
     "stateAdd": true
   },
-  "tcpServer": {
+  "locServer": {
     "webSocketPath":"/ws",
     "webEventSourcePath":"/es",
     "httpStaticPath":"/www/",
