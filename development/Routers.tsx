@@ -1,8 +1,8 @@
 import React, { FC, Suspense, lazy, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes, Link, Navigate } from 'react-router-dom';
 import { Space, Layout } from 'antd';
-const McuSpiffsApp = lazy(() => import('../mcu-spiffs/Routers'))
-const Mcuwebsocket = lazy(() => import('../mcu-websocket/Routers'))
+const McuSpiffsApp = lazy(() => import('../mcu-spiffs/App'))
+const Mcuwebsocket = lazy(() => import('../mcu-websocket/App'))
 const Mcuwebserial = lazy(() => import('../mcu-webserial/Routers'))
 // import VConsole from 'vconsole';
 // new VConsole();

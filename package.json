@@ -7,17 +7,11 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "dev": "vite --host 0.0.0.0",
-    "dev:mcu-spiffs": "vite --mode mcu-spiffs --host 0.0.0.0",
     "build:mcu-spiffs": "tsc && vite build --mode mcu-spiffs",
-    "dev:mcu-websocket": "vite --mode mcu-websocket --host 0.0.0.0",
     "build:mcu-websocket": "tsc && vite build --mode mcu-websocket",
-    "dev:mcu-webserial": "vite --mode mcu-webserial --host 0.0.0.0",
     "build:mcu-webserial": "tsc && vite build --mode mcu-webserial",
-    "dev:mcu-webbluetooth": "vite --mode mcu-webbluetooth --host 0.0.0.0",
     "build:mcu-webbluetooth": "tsc && vite build --mode mcu-webbluetooth",
-    "dev:internet-user": "vite --mode internet-user --host 0.0.0.0",
     "build:internet-user": "tsc && vite build --mode internet-user",
-    "dev:internet-admin": "vite --mode internet-admin --host 0.0.0.0",
     "build:internet-admin": "tsc && vite build --mode internet-admin",
     "preview": "vite preview"
   },

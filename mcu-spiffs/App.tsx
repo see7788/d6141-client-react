@@ -28,6 +28,5 @@ const App: FC = () => {
 export default () => (
   <Routes>
     <Route path='*' element={<App />}></Route>
-    <Route path='/22' element={<>***2222*****</>}></Route>
   </Routes>
 )
