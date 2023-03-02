@@ -1,113 +1,102 @@
-import globalConfig from "../globalConfig.json"
 import { immer } from 'zustand/middleware/immer'
 import { create } from "zustand"
 import _ from "lodash"
+import globalConfig from "../globalConfig.json";
 type PowerPartial<T> = { [U in keyof T]?: T[U] extends object ? PowerPartial<T[U]> : T[U]; }
-
-/*
-switch (ws.readyState) {
-    case 1://表示连接成功，可以通信了
-        ok("已经 ok");
-        break;
-    case 2://表示连接正在关闭
-    case 3://表示连接已经关闭，或者打开连接失败
-    case 0://值为0，表示正在连接
-        setTimeout(() => createWebSocket(url, onMessageCallBack), loingTime);
-        break;
-    default:
-        err("ws.readyState:" + ws.readyState);
-}*/
-let ws: WebSocket;
-export const YblUseDoType = ["坑门锁"] as const;
-export type YblUseDoType = (typeof YblUseDoType)[number];
-type UartYblstate = {
-    [i: string]: [
-        boolean, //状态
-        number, //位置序号
-        YblUseDoType?
+type Yblstate = {
+    [i: string]: [//id
+        boolean, //开关状态
+        number, //位置编号
+        number?//yblTypes[number]
     ]
 }
-export type GlobalConfig = {
-    uartYbl: { state: UartYblstate };
-    fangjian: {
-        nowNum?: number,
-        kenNum?: number
-    } & (typeof globalConfig)
+type State = (typeof globalConfig) & { yblstate: Yblstate }
+type ReqParam = {
+    state_merge?: PowerPartial<State>;
+    state_replace?: Partial<State>;
+    api_globalConfig_set?: Partial<State>,
+    api_globalConfig_get?: true,
+    api_globalConfig_toFile?: true,
+    api_globalConfig_fromFile?: true,
+    api_espRestart?: true
 };
-//espState: Record<string, Record<string, string>>;
-export type Store = {
-    reqInit: {
-        wsInit: (wsuri: `${"ws://" | "wss://"}${string}`) => Promise<true>;
-    }
-    globalConfig: GlobalConfig;
-    req: (
-        api?: "globalConfig_get" | "globalConfig_set" | "api_espRestart" | "api_globalConfig_fromFile" | "api_globalConfig_toFile",
-        globalConfig?: PowerPartial<GlobalConfig>
-    ) => Promise<void>;
+type Store = {
+    ipcInit: {
+        success?: boolean
+        websocketInit: (wsuri: `${"ws://" | "wss://"}${string}`) => Promise<true>;
+        reqInit: (sendFun: (str: string) => void) => void
+    };
+    res: (obj: Partial<State & { api: keyof State }>) => void;
+    req: (op: ReqParam) => any;
+    reqFun: (op: ReqParam, req: (str: string) => void) => void;
+    state: State;
 }
-
-export default create<Store>()(immer<Store>((set, self) => {
-    const res = ({ api, info }: { api: string, info: any }) => {
-        let webuseing = true;
-        switch (api) {
-            case "globalConfig":
-                set(s => {
-                    s.globalConfig = info
-                });
-                break;
-            case "fangjianState":
-                const { uartYblState, ...fj } = info as GlobalConfig["fangjian"] & {
-                    uartYblState: UartYblstate,
-                    nowNum: number,
-                    kenNum: number
-                }
-                set(s => {
-                    s.globalConfig.uartYbl.state = uartYblState;
-                    s.globalConfig.fangjian = fj;
-                })
-                break;
-            default:
-                webuseing = false;
+let ws: WebSocket;
+export default create<Store>()(immer<Store>((set) => {
+    const res: Store["res"] = obj => set(s => {
+        const { api, ...info } = obj;
+        if (api && typeof s.state[api] !== "undefined") {
+            s.state = { ...s.state, ...info }
+        } else {
+            console.log("web 不处理", api);
         }
-        console.log({ webuseing, api, info })
-    }
-    const wsReq: Store['req'] = async (api, globalConfig) => {
-        if (api && globalConfig) {
-            set(s => {
-                s.globalConfig = _.merge(s.globalConfig, globalConfig);
-                ws.send(JSON.stringify({ globalConfig: s.globalConfig, api }));
-            })
-        } else if (api) {
-            ws.send(JSON.stringify({ api }));
-        } else if (globalConfig) {
-            set(s => {
-                s.globalConfig = _.merge(s.globalConfig, globalConfig);
-            })
-        }
-    }
-
-    const wsInit: Store['reqInit']["wsInit"] = c => new Promise((ok) => {
+    })
+    const reqFun = (op: ReqParam, req: (str: string) => void) => set(s => {
+        Object.entries(op).map(([api, db]) => {
+            if (api === "state_merge") {
+                s.state = _.merge(s.state, db);
+            } else if (api === "state_replace") {
+                s.state = { ...s.state, ...db as Partial<State> };
+            } else {
+                req(JSON.stringify({ api, db }));
+            }
+        })
+    })
+    const reqInit: Store["ipcInit"]['reqInit'] = req => set(s => {
+        s.ipcInit.success = true;
+        s.req = op => reqFun(op, req)
+    })
+    const websocketInit: Store['ipcInit']["websocketInit"] = c => new Promise((ok) => {
         ws = new WebSocket(c);
         ws.onopen = e => {
             const loop = setInterval(() => {
                 if (ws.readyState === 1) {
                     ok(true);
+                    reqInit(ws.send)
                     clearInterval(loop)
                 }
             }, 1000);
             console.log(e)
         }
-        ws.onmessage = (e) => {
-            res(JSON.parse(e.data))
+        ws.onmessage = e => {
+            try {
+                const obj = JSON.parse(e.data);
+                res(obj)
+            } catch (e) {
+                console.log(e)
+            }
         };
         ws.onclose = e => {
             console.error("ws.onclose", e);
-            wsInit(c)
+            set(s => {
+                s.ipcInit.success = false
+            })
+            setTimeout(() => {
+                websocketInit(c);
+            }, 2000);
         }
     })
     return {
-        reqInit: { wsInit },
-        globalConfig: {} as GlobalConfig,
-        req: wsReq
+        ipcInit: {
+            websocketInit,
+            reqInit,
+        },
+        res,
+        req: op => reqFun(op, () => console.log("req未初始化，只执行本地修改")),
+        reqFun,
+        state: globalConfig as State
     }
 }))
+// let person= ['张三', '李四', '王五'];
+// console.log(person.unshift('小明')); // 头部插入，返回数组长度
+//person.pop();//删除最后一个

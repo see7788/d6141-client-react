@@ -1,7 +1,7 @@
 import React, { FC, Suspense, lazy, useEffect, useState } from 'react';
-import useUrlFrom from '../mcu-src/Component/ws-init/useWsUriToker';
+import useUrlFrom from '../mcu-src/ws-init/useWsUriToker';
 import { Routes, Route } from "react-router-dom";
-const QrCard = lazy(() => import("../mcu-src/Component/ws-init/QrCard"))
+const QrCard = lazy(() => import("../mcu-src/ws-init/QrCard"))
 
 // import VConsole from 'vconsole';
 // https://m.tb.cn/h.UM0j2vD?tk=tUtOdS6uVB2
@@ -27,6 +27,6 @@ const App: FC = () => {
 
 export default () => (
   <Routes>
-    <Route path='*' element={<App />}></Route>
+    <Route index element={<App />}></Route>
   </Routes>
 )

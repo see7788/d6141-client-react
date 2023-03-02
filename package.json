@@ -7,10 +7,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "dev": "vite --host 0.0.0.0",
-    "build:mcu-spiffs": "tsc && vite build --mode mcu-spiffs",
-    "build:mcu-websocket": "tsc && vite build --mode mcu-websocket",
-    "build:mcu-webserial": "tsc && vite build --mode mcu-webserial",
-    "build:mcu-webbluetooth": "tsc && vite build --mode mcu-webbluetooth",
+    "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -18,7 +15,7 @@
     "@ant-design/icons": "^5.0.1",
     "@antv/util": "^3.3.2",
     "@uiw/react-baidu-map": "^2.5.5",
-    "antd": "^5.2.1",
+    "antd": "5.2.3",
     "antd-mobile": "^5.28.0",
     "antd-mobile-icons": "^0.3.0",
     "d6141-lib-react-usewebserial": "workspace:^0.0.6",

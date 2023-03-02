@@ -2,15 +2,17 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from "path"
 import fs from "fs"
+const cwdPath = process.cwd()
+const apps = fs.readdirSync(cwdPath).
+  filter(name => fs.lstatSync(name).isDirectory()).
+  filter(c => ["mcu-spiffs"].indexOf(c) > -1)
 export default defineConfig((param) => {
   const isBuild = param.command === "build"
   const site = param.mode;
-  const cwdPath = process.cwd()
-  if(site==="development"){
-    console.log(fs.readdirSync(cwdPath))
-    throw new Error("must --mode=???")
+  if (apps.indexOf(site) === -1) {
+    throw new Error(`must --mode=${apps.join("|")}`)
   }
-  const sitePath =path.resolve(cwdPath, site)
+  const sitePath = path.resolve(cwdPath, site)
   const buildToPath = path.resolve(cwdPath, `${site}-build`)
   const indexHtmlPath = path.resolve(sitePath, "index.html")
   console.log({ isBuild, site, cwdPath, sitePath, buildToPath, indexHtmlPath })

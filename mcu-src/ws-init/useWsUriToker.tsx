@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect, ReactElement } from 'react';
-import store from "../../useStore";
+import store from "../useStore";
 //<pre>{JSON.stringify(c, null, 2)}</pre>
 //wsUri必须没有/结尾
 export default (host_?: string, param?: `wsUri=${string}`) => {

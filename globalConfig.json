@@ -5,6 +5,10 @@
     "doorType": "boy",
     "doorFloor": 0
   },
+  "yblState": {},
+  "yblTypes": [
+    "坑门锁"
+  ],
   "wifiApServer": {
     "ssid": "13520521413Ap",
     "hostname": "12345678"
