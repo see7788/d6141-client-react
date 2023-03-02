@@ -12,7 +12,6 @@ export default (host_?: string, param?: `wsUri=${string}`) => {
     const openError = "未能成功连接，请联系管理员"
     const [tokerMsg, tokerMsg_Set] = useState(loginStart);
     const tokerMsgSet = (str: string) => tokerMsg_Set(str + "请确保本页面是在您连接设备AP热点后，被AP自动打开的");
-    const wsInit = store(s => s.wsInit);
     const [host] = useState(host_ || window.location.href.split("?")[0])
     const [wsUri, wsUriSet] = useState("")
     const wsUriToker = () => {
@@ -32,15 +31,15 @@ export default (host_?: string, param?: `wsUri=${string}`) => {
                     tokerMsg_Set(getUriindexofError)
                 } else {
                     tokerMsgSet(openIng)
-                    wsInit(uri)
-                        .then(() => {
-                            wsUriSet(uri)
-                            tokerMsg_Set("")
-                            console.log(uri)
-                        })
-                        .catch(e => {
-                            tokerMsgSet(openError + JSON.stringify(e))
-                        });
+                    // wsInit(uri)
+                    //     .then(() => {
+                    //         wsUriSet(uri)
+                    //         tokerMsg_Set("")
+                    //         console.log(uri)
+                    //     })
+                    //     .catch(e => {
+                    //         tokerMsgSet(openError + JSON.stringify(e))
+                    //     });
                 }
             }
         }
