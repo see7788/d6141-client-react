@@ -1,10 +1,15 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from "path"
+import fs from "fs"
 export default defineConfig((param) => {
   const isBuild = param.command === "build"
   const site = param.mode;
   const cwdPath = process.cwd()
+  if(site==="development"){
+    console.log(fs.readdirSync(cwdPath))
+    throw new Error("must --mode=???")
+  }
   const sitePath =path.resolve(cwdPath, site)
   const buildToPath = path.resolve(cwdPath, `${site}-build`)
   const indexHtmlPath = path.resolve(sitePath, "index.html")

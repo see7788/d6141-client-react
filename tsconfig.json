@@ -16,6 +16,16 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["vite-env.d.ts"],
+  "include": [
+    "vite-env.d.ts",
+    "development",
+    "internet-admin",
+    "internet-user",
+    "mcu-spiffs",
+    "mcu-webbluetooth",
+    "mcu-webserial",
+    "mcu-websocket",
+    "mcu-src"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

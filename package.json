@@ -11,8 +11,6 @@
     "build:mcu-websocket": "tsc && vite build --mode mcu-websocket",
     "build:mcu-webserial": "tsc && vite build --mode mcu-webserial",
     "build:mcu-webbluetooth": "tsc && vite build --mode mcu-webbluetooth",
-    "build:internet-user": "tsc && vite build --mode internet-user",
-    "build:internet-admin": "tsc && vite build --mode internet-admin",
     "preview": "vite preview"
   },
   "dependencies": {

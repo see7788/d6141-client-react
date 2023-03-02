@@ -1,4 +1,4 @@
-import globalConfig from "../../globalConfig.json"
+import globalConfig from "../globalConfig.json"
 import { immer } from 'zustand/middleware/immer'
 import { create } from "zustand"
 import _ from "lodash"
