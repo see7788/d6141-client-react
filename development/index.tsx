@@ -1,7 +1,8 @@
-import React, { FC, Suspense } from 'react'
+import React, { FC, Suspense,lazy } from 'react'
 import ReactDOM from 'react-dom/client'
 import {BrowserRouter } from "react-router-dom";
-import App from "./Routers"
+const App = lazy(() => import('../mcu-spiffs/App'))
+// import App from "./Routers"
 ReactDOM.createRoot(
 	document.getElementById('root') as HTMLElement
 ).render(
