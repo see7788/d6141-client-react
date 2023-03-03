@@ -1,39 +1,14 @@
 import React, { FC, useState, useEffect } from 'react';
-import { Card, QRCode } from "antd/lib"
+import { Card, QRCode } from "antd"
+import { useRafState } from "react-use"
 //<pre>{JSON.stringify(c, null, 2)}</pre>
-const Ui: FC<{ qrUrl: string }> = ({ qrUrl }) => {
-    const [windowWidth, setwindowWidth] = useState(window.innerWidth);
-    function handleWindowResize() {
-        setwindowWidth(window.innerWidth);
-    }
-    const qrSizeDef = 350;
+const Ui: FC<{ qrUrl: string ,size?:number}> = ({ qrUrl,size=500 }) => {
     const qrTitle = "朋友加入可用微信或者相机扫码"
-    const qrDesc = "访问者之间的操作,是响应式的,实时互动的。扫码前，请确保您的设备已经连接到本设备上游路由器。"
-    const [qrSize, qrSizeSet] = useState(qrSizeDef)
-    useEffect(() => {
-        handleWindowResize();
-        window.addEventListener('resize', handleWindowResize);
-        return () => {
-            window.removeEventListener('resize', handleWindowResize);
-        };
-    }, []);
-    // const cccc = <Card
-    //     hoverable={true}
-    //     style={{ width: qrSizeDef }}
-    //     cover={
-    //         <QRCode
-    //             size={qrSize}
-    //             icon="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-    //             iconSize={90}
-    //             value={qrUrl}
-    //         />
-    //     }
-    // >
-    //     <Card.Meta
-    //         title={qrTitle}
-    //         description={qrDesc}
-    //     />
-    // </Card>
-    return <>1111111111</>
+    return <QRCode
+        size={size}
+        icon="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
+        iconSize={90}
+        value={qrUrl}
+    />
 }
 export default Ui;

@@ -5,10 +5,34 @@
     "doorType": "boy",
     "doorFloor": 0
   },
-  "yblState": {},
-  "yblTypes": [
-    "坑门锁"
-  ],
+  "yblState": {
+    "xxx225dd": [
+      2,
+      false,
+      0
+    ],
+    "xx66xxx3": [
+      3,
+      true,
+      1
+    ],
+    "xx66xx5x3": [
+      1,
+      true,
+      1
+    ],
+    "xx66x85x3": [
+      1,
+      true,
+      1
+    ]
+  },
+  "yblRes": {
+    "doTypes": [
+      "待配置","坑位锁","卫生纸sos","洗手液sos"
+    ],
+    "addState": true
+  },
   "wifiApServer": {
     "ssid": "13520521413Ap",
     "hostname": "12345678"

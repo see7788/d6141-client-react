@@ -1,51 +1,50 @@
-import React, { FC, useState, useEffect, ReactElement } from 'react';
+import React, { useState, useEffect} from 'react';
 import store from "../useStore";
 //<pre>{JSON.stringify(c, null, 2)}</pre>
 //wsUri必须没有/结尾
-export default (host_?: string, param?: `wsUri=${string}`) => {
+export default (param?: `wsUri=${string}`) => {
+    const [wsUri, wsUriSet] = useState("")
+    const wsInit = store(s => s.ipcInit.websocketInit)
     const loginStart = "正在获取ws参数..."
-    const getUrlError = "错误，url所有参数不存在！请关闭浏览器重新访问。"
-    const getUriError = "错误，wsUrl参数不存在！请关闭浏览器重新访问。"
-    const getUricharAtError = "错误，wsUrl参数不能/结尾！请关闭浏览器重新访问。"
-    const getUriindexofError = "错误，wsUrl参数不能/结尾！请关闭浏览器重新访问。"
+    const urlError = "错误，url?所有参数空！请关闭浏览器重新访问。"
+    const uriError = "错误，uri参数不存在！请关闭浏览器重新访问。"
+    const uricharAtError = "错误，uri参数不能/结尾！请关闭浏览器重新访问。"
+    const uriindexofError = "错误，uri参数不能/结尾！请关闭浏览器重新访问。"
+    const uriSuccess = "uri 参数正确"
     const openIng = "正在连接mcu服务器。如果两三秒没连上请联系管理员"
     const openError = "未能成功连接，请联系管理员"
-    const [tokerMsg, tokerMsg_Set] = useState(loginStart);
-    const tokerMsgSet = (str: string) => tokerMsg_Set(str + "请确保本页面是在您连接设备AP热点后，被AP自动打开的");
-    const [host] = useState(host_ || window.location.href.split("?")[0])
-    const [wsUri, wsUriSet] = useState("")
+    const [msg, msg_Set] = useState<string>(loginStart);
+    const msgSet = (str: string) => msg_Set(str + "请确保本页面是在您连接设备AP热点后，被AP自动打开的");
     const wsUriToker = () => {
         const c = param ? param : window.location.href.split("?")[1]
         if (!c) {
-            tokerMsgSet(getUrlError);
+            msgSet(urlError);
         } else {
             const c2 = new URLSearchParams(c);
             const op = Object.fromEntries(c2.entries());
             if (!op["wsUri"]) {
-                tokerMsgSet(getUriError)
+                msgSet(uriError)
             } else {
                 const uri = op["wsUri"] as `${"ws://" | "wss://"}${string}`;
                 if (uri.charAt(uri.length - 1) == "/") {
-                    tokerMsg_Set(getUricharAtError)
+                    msg_Set(uricharAtError)
                 } else if (uri.indexOf("ws://") !== 0 && uri.indexOf("wss://") !== 0) {
-                    tokerMsg_Set(getUriindexofError)
+                    msg_Set(uriindexofError)
                 } else {
-                    tokerMsgSet(openIng)
-                    // wsInit(uri)
-                    //     .then(() => {
-                    //         wsUriSet(uri)
-                    //         tokerMsg_Set("")
-                    //         console.log(uri)
-                    //     })
-                    //     .catch(e => {
-                    //         tokerMsgSet(openError + JSON.stringify(e))
-                    //     });
+                    msgSet(uriSuccess + ";" + openIng)
+                    wsInit(uri)
+                        .then(() => {
+                            wsUriSet(uri)
+                        })
+                        .catch(e => {
+                            msgSet(openError + JSON.stringify(e))
+                        });
                 }
             }
         }
     }
     useEffect(() => {
         wsUriToker()
-    }, [])
-    return { tokerMsg, qrUrl: () => host + "?wsUri=" + wsUri }
+    }, [param])
+    return { msg, wsUri }
 }
