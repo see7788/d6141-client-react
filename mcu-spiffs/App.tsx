@@ -25,7 +25,7 @@ const middle = {
 export default () => {
   const pageGoto = useNavigate();
   const { msg, wsUri } = useUrlFrom("wsUri=ws://192.168.110.119/ws")
-  const ipc_success = store(s => s.ipcInit.success)
+  const ipc_success = store(s => s.ipc.success)
   const [pageId, pageIdSet] = useState(0);
   const onChange = (value: number) => {
     if (value > 0 && ipc_success === false) {
@@ -43,30 +43,29 @@ export default () => {
       pageGoto("/0")
     }
   }, [ipc_success])
-  const test = <Steps
-    size="small"
-    progressDot
-    current={pageId}
-    onChange={onChange}
-    items={[
-      {
-        title: '通讯途径',
-        subTitle: ipc_success ? "已连接" : "未连接",
-      },
-      {
-        title: '操作配置',
-        description: <Space><>房间</><>接收器</></Space>,
-      }
-    ]}
-  />
   const t = (
     <Row >
       <Col span={24}>
-        <Row>{test}</Row>
+        <Row><Steps
+          size="small"
+          progressDot
+          current={pageId}
+          onChange={onChange}
+          items={[
+            {
+              title: '通讯途径',
+              subTitle: ipc_success ? "已连接" : "未连接",
+            },
+            {
+              title: '操作配置',
+              description: <Space><>房间</><>接收器</></Space>,
+            }
+          ]}
+        /></Row>
         <Row>
           <Routes>
             <Route path="/0" element={
-            <div><Space>{wsUri ? <QrCard qrUrl={wsUri} size={300} /> : msg}<>webSerial</><>webSocket</><>Qrcode</></Space></div>
+              <div><Space>{wsUri ? <QrCard qrUrl={wsUri} size={300} /> : msg}<>webSerial</><>webSocket</><>Qrcode</></Space></div>
             } ></Route>
             <Route path="/1" element={<YblState />} ></Route>
             <Route path="/*" element={<>404</>} ></Route>
