@@ -19,7 +19,7 @@ const UiaddState: FC = () => {
             block
             options={Object.keys(obj)}
             value={stateAdd ? '允许添加传感器' : '不许添加传感器'}
-            onChange={(e:keyof typeof obj) => set(obj[e])}
+          //  onChange={(e:keyof typeof obj) => set(obj[e])}
         />
     )
 }

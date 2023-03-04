@@ -1,6 +1,5 @@
 import React, { FC, Suspense, lazy, useEffect, useState } from 'react';
 import store from "../mcu-src/useStore"
-import { } from "react-use"
 import { } from "d6141-lib-react-usewebserial/src"
 import { Space, notification, Col, Row, Steps } from "antd"
 import useUrlFrom from '../mcu-src/ws-init/useWsUriToker';
@@ -28,11 +27,13 @@ export default () => {
   const ipc_success = store(s => s.ipc.success)
   const [pageId, pageIdSet] = useState(0);
   const onChange = (value: number) => {
-    if (value > 0 && ipc_success === false) {
+    if (!ipc_success) {
       notification.open({
         message: '错误',
         description: '通讯状态是已连接时才能操作配置'
       })
+      pageIdSet(0)
+      pageGoto(`/0`)
     } else {
       pageIdSet(value)
       pageGoto(`/${value}`)

@@ -5,7 +5,7 @@ import fs from "fs"
 const cwdPath = process.cwd()
 const apps = fs.readdirSync(cwdPath).
   filter(name => fs.lstatSync(name).isDirectory()).
-  filter(c => ["mcu-spiffs"].indexOf(c) > -1)
+  filter(c => ["mcu-spiffs","mcu-webserial"].indexOf(c) > -1)
 export default defineConfig((param) => {
   const isBuild = param.command === "build"
   const site = param.mode;

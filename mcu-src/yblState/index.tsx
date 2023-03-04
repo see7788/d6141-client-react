@@ -28,16 +28,15 @@ const UiyblState: FC = () => {
     const doTypes = store(s => s.state.yblRes.doTypes);
     const del = (id: string) => store.setState(s => {
         delete s.state.yblState[id];
-        //s.ipc.req({ api_globalConfig_set: { yblState: s.state.yblState } })
         s.req({ api_globalConfig_set: { yblState: s.state.yblState } })
     });
     const setOrderBy = (id: string, by: number) => store.setState(s => {
         s.state.yblState[id][0] = by
-        //s.ipc.req({ api_globalConfig_set: { yblState: s.state.yblState } })
+        s.req({ api_globalConfig_set: { yblState: s.state.yblState } })
     });
     const setDoType = (id: string, doId: number) => store.setState(s => {
         s.state.yblState[id][2] = doId
-        //s.ipc.req({ api_globalConfig_set: { yblState: s.state.yblState } })
+        s.req({ api_globalConfig_set: { yblState: s.state.yblState } })
     });
     //先按用途，再按定义排序
     // c => `${c[1][2]}${c[1][0]}`

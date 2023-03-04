@@ -1,17 +1,17 @@
 import { immer } from 'zustand/middleware/immer'
 import { create } from "zustand"
 import _ from "lodash"
-// declare global {  //设置全局属性
-//     interface Window {  //window对象属性
-//         my_req: (str: string) => void
-//     }
-// }
+declare global {  //设置全局属性
+    interface Window {  //window对象属性
+        my_req: (str: string) => void
+    }
+}
 export default <ReqParam extends Record<string, any>, State extends Record<string, any>>(state: State) => {
     let ws: WebSocket;
-    let my_req: (str: string) => void
+    // let my_req: (str: string) => void
     type Store = {
         ipc: {
-            success: boolean
+            success?: string
             websocketInit: (wsuri: `${"ws://" | "wss://"}${string}`) => Promise<true>;
             res: (obj: Partial<State & { api: keyof State }>) => void;
         };
@@ -33,8 +33,8 @@ export default <ReqParam extends Record<string, any>, State extends Record<strin
                 const loop = setInterval(() => {
                     if (ws.readyState === 1) {
                         set(s => {
-                            s.ipc.success = true;
-                            my_req = op => ws.send(JSON.stringify(op))
+                            s.ipc.success = "wesocket";
+                            window.my_req = op => ws.send(JSON.stringify(op))
                         })
                         ok(true);
                         clearInterval(loop)
@@ -52,8 +52,9 @@ export default <ReqParam extends Record<string, any>, State extends Record<strin
             ws.onclose = e => {
                 console.error("ws.onclose", e);
                 set(s => {
-                    s.ipc.success = false
+                   delete s.ipc.success
                 })
+                console.error(e)
                 setTimeout(() => {
                     websocketInit(c);
                 }, 2000);
@@ -61,7 +62,6 @@ export default <ReqParam extends Record<string, any>, State extends Record<strin
         })
         return {
             ipc: {
-                success: false,
                 websocketInit,
                 res,
             },
@@ -72,7 +72,7 @@ export default <ReqParam extends Record<string, any>, State extends Record<strin
                     } else if (api === "state_replace") {
                         s.state = { ...s.state, ...db as Partial<State> };
                     } else {
-                        my_req({ api, db } as any);
+                        window.my_req({ api, db } as any);
                     }
                 })
             }),
