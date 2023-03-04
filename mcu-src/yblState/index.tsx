@@ -41,8 +41,7 @@ const UiyblState: FC = () => {
     //先按用途，再按定义排序
     // c => `${c[1][2]}${c[1][0]}`
     const children = _.orderBy(db_entries).map(([id, info]) => {
-        const [byNumber, state] = info;
-        const doId = info[2] as number
+        const [byNumber, state, doId] = info as [number, boolean, number];
         const doname = doTypes[doId]
         const style = { backgroundColor: state ? '#FF3366' : "#33CC33" }
         return (

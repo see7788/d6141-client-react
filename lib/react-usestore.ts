@@ -21,11 +21,11 @@ export default <ReqParam extends Record<string, any>, State extends Record<strin
     return create<Store>()(immer<Store>((set, self) => {
         const res: Store["ipc"]["res"] = obj => set(s => {
             const { api, ...info } = obj;
-            const use=api && (api === "globalConfig" || typeof s.state[api] !== "undefined")
+            const use = api && (api === "globalConfig" || typeof s.state[api] !== "undefined")
             if (use) {
                 s.state = { ...s.state, ...info }
-            } 
-            console.log({webuse:use, api, info});
+            }
+            console.log({ webuse: use, api, info });
         })
         const websocketInit: Store['ipc']["websocketInit"] = c => new Promise((ok) => {
             ws = new WebSocket(c);
@@ -36,8 +36,9 @@ export default <ReqParam extends Record<string, any>, State extends Record<strin
                             s.ipc.success = "wesocket";
                             window.my_req = op => ws.send(JSON.stringify(op))
                         })
-                        ok(true);
                         clearInterval(loop)
+                        console.log("ws.onopen", "成功连接")
+                        ok(true);
                     }
                 }, 1000);
             }
@@ -46,15 +47,14 @@ export default <ReqParam extends Record<string, any>, State extends Record<strin
                     const obj = JSON.parse(e.data);
                     res(obj)
                 } catch (e) {
-                    console.log(e)
+                    console.error("ws.onmessage", e)
                 }
             };
             ws.onclose = e => {
                 console.error("ws.onclose", e);
                 set(s => {
-                   delete s.ipc.success
+                    delete s.ipc.success
                 })
-                console.error(e)
                 setTimeout(() => {
                     websocketInit(c);
                 }, 2000);

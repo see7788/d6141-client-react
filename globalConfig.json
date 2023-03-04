@@ -3,7 +3,9 @@
     "id": 1,
     "doorName": "testname",
     "doorType": "boy",
-    "doorFloor": 0
+    "doorFloor": 0,
+    "nowNum":0,
+    "kenNum":0
   },
   "yblState": {
     "xxx225dd": [
@@ -31,21 +33,12 @@
     "doTypes": [
       "待配置","坑位锁","卫生纸sos","洗手液sos"
     ],
-    "addState": true
+    "add": true
   },
   "wifiApServer": {
+    "workIng": false,
     "ssid": "13520521413Ap",
     "hostname": "12345678"
-  },
-  "mdnsServer": {
-    "taskIng": false,
-    "staticIp": [
-      192,
-      168,
-      8,
-      8
-    ],
-    "hostHand": "AP13520521413"
   },
   "wifiSta": {
     "hostname": "13520521413",
@@ -54,18 +47,32 @@
     "localIP": "",
     "connectionIng": false
   },
+  "mdnsServer": {
+    "taskIng": false,
+    "cpu":0,
+    "staticIp": [
+      192,
+      168,
+      8,
+      8
+    ],
+    "hostHand": "AP13520521413"
+  },
   "serialServer": {
-    "taskIng": false
+    "workIng": false
   },
   "bluetoothServer": {
-    "taskIng": false
+    "taskIng": false,
+    "cpu":0
   },
   "webServer": {
     "taskIng": false,
+    "cpu":0,
     "workIng": false
   },
   "wsClient": {
     "taskIng": false,
+    "cpu":0,
     "connectionIng": false,
     "uri": "ws://39.97.216.195:6014"
   }
