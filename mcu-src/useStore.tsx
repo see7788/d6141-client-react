@@ -2,12 +2,14 @@ import reactstore from "../lib/react-usestore"
 import globalConfig from "../globalConfig.json";
 type PowerPartial<T> = { [U in keyof T]?: T[U] extends object ? PowerPartial<T[U]> : T[U]; }
 export type State = (typeof globalConfig) & {
-    yblState: {
-        [i: string]: [//id
-            number, //定义排序
-            boolean, //state开关状态
-            number//yblRes.doTypes[number]用途
-        ]
+    ybl: {
+        db: {
+            [i: string]: [//id
+                number, //定义排序
+                boolean, //state开关状态
+                number//yblRes.doTypes[number]用途
+            ]
+        }
     }
 }
 

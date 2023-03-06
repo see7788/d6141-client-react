@@ -25,7 +25,7 @@ const middle = {
   justifyContent: 'center'
 }
 export default () => {
-  const ipc_success = store(s => s.ipc.success)
   const { msg, wsUri } = useUrlFrom("wsUri=ws://192.168.110.171/ws")
-  return ipc_success ? <App /> : <>{msg}</>
+  const ipc_success = store(s => s.ipc.success)
+  return <>{ipc_success ? <App /> : msg}</>
 }

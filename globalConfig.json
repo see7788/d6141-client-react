@@ -4,16 +4,19 @@
     "doorName": "testname",
     "doorType": "boy",
     "doorFloor": 0,
-    "nowNum":0,
-    "kenNum":0
+    "nowNum": 0,
+    "kenNum": 0
   },
-  "yblState": { },
-  "yblRes": {
+  "ybl": {
+    "db": { },
     "doTypes": [
-      "false","closestool","sos paper","sos liquid","sos dirty"
+      "false",
+      "closestool",
+      "sos paper",
+      "sos liquid",
+      "sos dirty"
     ],
-    "fromTypes":{},
-    "add": true
+    "addDb": true
   },
   "wifiApServer": {
     "workIng": false,
@@ -27,8 +30,10 @@
     "localIP": "",
     "connectionIng": false
   },
+  "ETH":{
+    "localIP":""
+  },
   "mdnsServer": {
-    "taskIng": false,
     "staticIp": [
       192,
       168,
@@ -38,18 +43,14 @@
     "hostHand": "AP13520521413"
   },
   "serialServer": {
-    "taskIng": false,
     "workIng": false
   },
   "bluetoothServer": {
-    "taskIng": false
   },
   "webServer": {
-    "taskIng": false,
     "workIng": false
   },
   "wsClient": {
-    "taskIng": false,
     "connectionIng": false,
     "uri": "ws://39.97.216.195:6014"
   }

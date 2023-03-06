@@ -23,20 +23,20 @@ import {
     FormOutlined
 } from '@ant-design/icons';
 const UiyblState: FC = () => {
-    const dbs = store(s => s.state.yblState);
+    const dbs = store(s => s.state.ybl.db);
     const db_entries = Object.entries(dbs)
-    const doTypes = store(s => s.state.yblRes.doTypes);
+    const doTypes = store(s => s.state.ybl.doTypes);
     const del = (id: string) => store.setState(s => {
-        delete s.state.yblState[id];
-        s.req({ api_globalConfig_set: { yblState: s.state.yblState } })
+        delete s.state.ybl.db[id];
+        s.req({ api_globalConfig_set: { ybl: s.state.ybl } })
     });
     const setOrderBy = (id: string, by: number) => store.setState(s => {
-        s.state.yblState[id][0] = by
-        s.req({ api_globalConfig_set: { yblState: s.state.yblState } })
+        s.state.ybl.db[id][0] = by
+        s.req({ api_globalConfig_set: { ybl: s.state.ybl } })
     });
     const setDoType = (id: string, doId: number) => store.setState(s => {
-        s.state.yblState[id][2] = doId
-        s.req({ api_globalConfig_set: { yblState: s.state.yblState } })
+        s.state.ybl.db[id][2] = doId
+        s.req({ api_globalConfig_set: { ybl: s.state.ybl } })
     });
     //先按用途，再按定义排序
     // c => `${c[1][2]}${c[1][0]}`

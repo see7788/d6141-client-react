@@ -17,15 +17,24 @@ export default <ReqParam extends Record<string, any>, State extends Record<strin
         };
         req: (op: ReqParam) => any;
         state: State;
+        stateInit?:true
     }
     return create<Store>()(immer<Store>((set, self) => {
         const res: Store["ipc"]["res"] = obj => set(s => {
             const { api, ...info } = obj;
-            const use = api && (api === "globalConfig" || typeof s.state[api] !== "undefined")
-            if (use) {
-                s.state = { ...s.state, ...info }
+            if (api) {
+                if (api === "globalConfig") {
+                    s.state = { ...s.state, ...info }
+                    console.log(obj);
+                } else if (typeof s.state[api] !== "undefined") {
+                    s.state = { ...s.state, [api]: info }
+                    console.log(obj);
+                } else {
+                    console.log({ api: api + ";web pass", ...info });
+                }
+            } else {
+                console.log({ api: "undefind web pass", ...info });
             }
-            console.log({ webuse: use, api, info });
         })
         const websocketInit: Store['ipc']["websocketInit"] = c => new Promise((ok) => {
             ws = new WebSocket(c);
