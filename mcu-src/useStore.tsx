@@ -13,16 +13,15 @@ type State = (typeof globalConfig) & {
     }
 }
 type Store = {
-    ipc:{
-        webSocketInit:(wsuri: `${"ws://" | "wss://"}${string}`)=>Promise<void>
-        stateInitSuccess?:true
-        workIng?:"webSocket"
+    ipc: {
+        webSocketInit: (wsuri: `${"ws://" | "wss://"}${string}`) => Promise<void>
+        workIng?: "webSocket"
         //ipcSet:(ipcNow:"webSocket")=>Promise<void>
     };
-    res: <api extends (keyof State) >(op: { api: api, db: State[api] } | { api: "globalConfig", db: State }) => void
+    res: <T extends keyof State >(op: ({ api: T, db: State[T] } | { api: "globalConfig", db: State })) => void
     req: <T extends keyof State>(
-        ...op: ["api_config_get", keyof State] |
-        ["api_config_set", T, State[keyof State]] |
+        ...op: ["api_config_get", T] |
+        ["api_config_set", [T, State[T]]] |
         ["api_globalConfig_set", Partial<State>] |
         ["api_globalConfig_get"] |
         ["api_globalConfig_toFile"] |
@@ -36,33 +35,32 @@ export default create<Store>()(immer<Store>((set, self) => {
     let req: Store["req"]
     const res: Store["res"] = ({ api, db }) => set(s => {
         if (api === "globalConfig") {
-            s.ipc.stateInitSuccess=true;
             s.state = { ...s.state, ...db }
         } else if (api in s.state) {
-            s.state = { ...s.state, ...db }
+            s.state = { ...s.state, [api]:db }
         } else {
             console.log(api + ";web pass");
         }
     })
-    const loingStateSuccess = ():Promise<void> => new Promise((ok) => {
+    const loingState = (): Promise<void> => new Promise((ok) => {
         const loop = setInterval(() => {
-            if (self().ipc.stateInitSuccess) {
+            if (self().state) {
                 clearInterval(loop)
                 ok();
             }
         }, 500);
     })
-    const wsInit:Store["ipc"]["webSocketInit"]=(wsuri)=> new Promise((ok) => {
+    const wsInit: Store["ipc"]["webSocketInit"] = (wsuri) => new Promise((ok) => {
         ws = new WebSocket(wsuri);
         ws.onopen = e => {
             const loop = setInterval(() => {
                 if (ws.readyState === 1) {
                     req = (...op) => {
-                        const [api, ...db] = op;
-                        ws.send(JSON.stringify({ api, db }))
+                        const [api, db] = op;
+                        ws.send(JSON.stringify({ api, db}))
                     }
-                    set(s=>{
-                       s.ipc.workIng="webSocket";
+                    set(s => {
+                        s.ipc.workIng = "webSocket";
                     })
                     clearInterval(loop)
                     console.log("ws.onopen", "成功连接")
@@ -80,8 +78,8 @@ export default create<Store>()(immer<Store>((set, self) => {
         };
         ws.onclose = e => {
             console.error("ws.onclose", e);
-            set(s=>{
-               delete s.ipc.workIng;
+            set(s => {
+                delete s.ipc.workIng;
             })
             setTimeout(() => {
                 wsInit(wsuri);
@@ -89,13 +87,13 @@ export default create<Store>()(immer<Store>((set, self) => {
         }
     })
     return {
-        ipc:{
-            webSocketInit:(c)=>wsInit(c).then(()=>req("api_globalConfig_get")).then(loingStateSuccess),
-           // ipcSet:async()=>{}
+        ipc: {
+            webSocketInit: (c) => wsInit(c).then(() => req("api_globalConfig_get")).then(loingState),
+            // ipcSet:async()=>{}
         },
         res,
         req: (...op) => req(...op),
-        state: globalConfig as State
+        state: false as unknown as State
     }
 }))
 // let person= ['张三', '李四', '王五'];
