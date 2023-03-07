@@ -1,4 +1,7 @@
 {
+  "token":{
+    "tokenId":""
+  },
   "fangjian": {
     "id": 1,
     "doorName": "testname",
