@@ -13,13 +13,16 @@
   "ybl": {
     "db": { },
     "doTypes": [
-      "false",
-      "closestool",
-      "sos paper",
-      "sos liquid",
-      "sos dirty"
+      "待配置",
+      "蹲坑锁",
+      "跌倒sos",
+      "洗手液",
+      "卫生纸",
+      "保洁"
     ],
     "addDb": true
+  },
+  "bluetoothServer": {
   },
   "wifiApServer": {
     "workIng": false,
@@ -47,8 +50,6 @@
   },
   "serialServer": {
     "workIng": false
-  },
-  "bluetoothServer": {
   },
   "webServer": {
     "workIng": false

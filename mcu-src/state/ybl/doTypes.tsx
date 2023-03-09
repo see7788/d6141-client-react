@@ -1,13 +1,14 @@
 import React, { FC, useState, useRef, useEffect } from 'react';
-import store from "../useStore";
+import store from "../../useStore";
 import { PlusOutlined } from '@ant-design/icons';
 import { Tag, InputRef, Input, Tooltip, Space, theme } from 'antd';
-const App: React.FC = () => {
+const App: FC = () => {
     const tags = store(s => s.state.ybl.doTypes);
-    const { token } = theme.useToken();
     const setTags = (newTags: string[]) => store.setState(s => {
         s.state.ybl.doTypes = newTags;
+        s.req('api_config_set', "ybl", s.state.ybl)
     })
+    const { token } = theme.useToken();
     const [inputVisible, setInputVisible] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [editInputIndex, setEditInputIndex] = useState(-1);
@@ -68,7 +69,8 @@ const App: React.FC = () => {
         background: token.colorBgContainer,
         borderStyle: 'dashed',
     };
-
+    const ybldb = store(s => s.state.ybl.db);
+    const dbUseIng=Object.entries(ybldb).map(e=>Number(e[1][2]))
     return (
         <Space size={[0, 8]} wrap>
             <Space size={[0, 8]} wrap>
@@ -78,7 +80,7 @@ const App: React.FC = () => {
                             <Input
                                 ref={editInputRef}
                                 key={tag}
-                                size="small"
+                                size="large"
                                 style={tagInputStyle}
                                 value={editInputValue}
                                 onChange={handleEditInputChange}
@@ -91,7 +93,7 @@ const App: React.FC = () => {
                     const tagElem = (
                         <Tag
                             key={tag}
-                            closable={index !== 0}
+                            closable={dbUseIng.indexOf(index)==-1}
                             style={{ userSelect: 'none' }}
                             onClose={() => handleClose(tag)}
                         >
@@ -130,7 +132,7 @@ const App: React.FC = () => {
                 />
             ) : (
                 <Tag style={tagPlusStyle} onClick={showInput}>
-                    <PlusOutlined /> New Tag
+                    <PlusOutlined /> New 用途
                 </Tag>
             )}
         </Space>

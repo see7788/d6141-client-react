@@ -5,11 +5,9 @@ import App from "d6141-lib-react-usewebserial/demo/App"
 ReactDOM.createRoot(
 	document.getElementById('root') as HTMLElement
 ).render(
-	<Suspense fallback={<>Loading..</>}>
 		<React.StrictMode>
 			<BrowserRouter>
 				<App />
 			</BrowserRouter>
 		</React.StrictMode>
-	</Suspense>
 )

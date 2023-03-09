@@ -1,10 +1,10 @@
 import React, { useState, useEffect} from 'react';
-import store from "../useStore";
+import store from "../../useStore";
 //<pre>{JSON.stringify(c, null, 2)}</pre>
 //wsUri必须没有/结尾
 export default (param?: `wsUri=${string}`) => {
     const [wsUri, wsUriSet] = useState("")
-    const wsInit = store(s => s.ipc.websocketInit)
+    const wsInit = store(s => s.ipc.webSocketInit)
     const loginStart = "正在获取ws参数..."
     const urlError = "错误，url?所有参数空！请关闭浏览器重新访问。"
     const uriError = "错误，uri参数不存在！请关闭浏览器重新访问。"
