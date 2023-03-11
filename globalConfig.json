@@ -26,15 +26,13 @@
   },
   "wifiApServer": {
     "workIng": false,
-    "ssid": "13520521413Ap",
-    "hostname": "12345678"
+    "ssid": "1352Ap",
+    "hostname": "1352hostname"
   },
   "wifiSta": {
-    "hostname": "13520521413",
     "ssid": "shuzijia",
     "password": "80508833",
-    "localIP": "",
-    "connectionIng": false
+    "localIP": ""
   },
   "ETH":{
     "localIP":""
@@ -46,7 +44,7 @@
       8,
       8
     ],
-    "hostHand": "AP13520521413"
+    "hostHand": "1352mdns"
   },
   "serialServer": {
     "workIng": false

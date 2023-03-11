@@ -31,7 +31,7 @@ class StreamToJsonStr {
         controller.enqueue("flush");
     }
 }
-class WebSerial {
+class WebSerialClass {
     private readableStreamClosed
     private decoder
     private reader
@@ -127,7 +127,7 @@ type Store = {
     state: State
 }
 export default create<Store>()(immer<Store>((set, self) => {
-    let webSerialObj: WebSerial
+    let webSerialObj: WebSerialClass
     let webSocketObj: WebSocket
     let req: Store["req"]
     const res: Store["res"] = ({ api, info }) => set(s => {
@@ -184,7 +184,7 @@ export default create<Store>()(immer<Store>((set, self) => {
         }
     })
     const webSerialInit = async (port: SerialPort) => {
-        webSerialObj = new WebSerial(
+        webSerialObj = new WebSerialClass(
             port,
             str => {
                 const { api, info } = JSON.parse(str);

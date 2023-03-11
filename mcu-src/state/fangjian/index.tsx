@@ -45,7 +45,7 @@ const App: FC = () => {
             <Descriptions.Item label="楼层">
                 <Segmented
                     value={c.doorFloor}
-                    options={Array.from(new Array(10),(c,i)=>++i)}
+                    options={Array.from(new Array(9),(c,i)=>++i)}
                     onChange={set_doorFloor}
                     />
             </Descriptions.Item>

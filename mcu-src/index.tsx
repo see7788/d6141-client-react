@@ -1,6 +1,6 @@
 import React, { FC, Suspense, lazy, useEffect, useState } from 'react';
-import { notification, Collapse, Col, Row, Steps } from "antd"
-import { useNavigate, RouteObject, useRoutes } from "react-router-dom";
+import { notification, Steps, } from "antd"
+import { useNavigate, useRoutes } from "react-router-dom";
 import store from "./useStore"
 const Ipc = lazy(() => import("./ipc"))
 const State = lazy(() => import("./state"))
@@ -22,7 +22,7 @@ const Def: FC = () => {
             routerset(0);
         }
     }, [name])
-    const Pages=useRoutes([
+    const Pages = useRoutes([
         {
             path: "/*",
             element: <Suspense fallback={<>我是懒加载</>}><Ipc /></Suspense>,
@@ -38,11 +38,12 @@ const Def: FC = () => {
             items={[
                 {
                     title: name ? `${name}已连接` : "请选择通讯方式",
-                    //subTitle: "切换连接方式",
+                    description: "切换通讯方式",
+                    // subTitle: "切换通讯方式",
                 },
                 {
                     title: '操作配置',
-                    //subTitle: "切换"
+                    description: "持久保存配置"
                 }
             ]}
         />{Pages}</>;
