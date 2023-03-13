@@ -129,39 +129,44 @@ type Store = {
 export default create<Store>()(immer<Store>((set, self) => {
     let webSerialObj: WebSerialClass
     let webSocketObj: WebSocket
-    let req: Store["req"]
+    let req: Store["req"] = async (...req) => console.log("req def", ...req);
     const res: Store["res"] = ({ api, info }) => set(s => {
-        console.log("res", { api, info })
+        let webuseIng=true
         if (api === "globalConfig") {
             s.state = { ...s.state, ...info }
             s.ipc.globalConfig = true;
         } else if (s.state[api]) {
             s.state = { ...s.state, [api]: info }
         } else {
-            console.log(api + ";web pass");
+            webuseIng=false
         }
+        console.log({api,webuseIng,info});
     })
-    const loing = (): Promise<void> => new Promise((ok) => {
+    const loingGlobalConfig = (): Promise<void> => new Promise((ok) => {
         const loop = setInterval(() => {
             const c = self().ipc.globalConfig
-            console.log(c)
             if (c) {
                 clearInterval(loop)
                 ok();
             }
         }, 500);
     })
-    const webSocketInit: Store["ipc"]["webSocketInit"] = (wsuri) => new Promise((ok) => {
+    const webSocketInit: Store["ipc"]["webSocketInit"] = (wsuri) => new Promise((ok, err) => {
+        console.log("wsuri", wsuri)
         webSocketObj = new WebSocket(wsuri);
+        //webSocketObj.binaryType="arraybuffer";
         webSocketObj.onopen = e => {
+            let i = 0;
             const loop = setInterval(() => {
                 if (webSocketObj.readyState === 1) {
-                    req = async (...op) => {
-                        const [api, ...info] = op;
-                        webSocketObj.send(JSON.stringify({ api, info }))
-                    }
                     clearInterval(loop)
                     ok();
+                } else if (i > 5) {
+                    console.error("loing max", 5)
+                    err("loing max 5")
+                } else {
+                    i++
+                    console.log("loing", i)
                 }
             }, 1000);
         }
@@ -183,39 +188,47 @@ export default create<Store>()(immer<Store>((set, self) => {
             }, 2000);
         }
     })
-    const webSerialInit = async (port: SerialPort) => {
-        webSerialObj = new WebSerialClass(
-            port,
-            str => {
-                const { api, info } = JSON.parse(str);
-                res({ api, info });
-            },
-            () => {
-                set(s => {
-                    delete s.ipc.name;
-                })
-            })
-    }
     return {
         ipc: {
-            webSerialInit: async () => navigator.serial?.requestPort().then(webSerialInit).then(() => {
+            webSerialInit: async () => navigator.serial?.requestPort().then(async (port) => {
+                webSerialObj = new WebSerialClass(
+                    port,
+                    str => {
+                        const { api, info } = JSON.parse(str);
+                        res({ api, info });
+                    },
+                    () => {
+                        set(s => {
+                            delete s.ipc.name;
+                        })
+                    })
+                req = async (...op) => {
+                    const [api, ...info] = op;
+                    console.log({ "req": "webSerialObj.send", api, info })
+                    webSerialObj.send(JSON.stringify({ api, info }))
+                }
+                await self().req("api_globalConfig_get")
+                await loingGlobalConfig();
                 set(s => {
                     s.ipc.name = "webSerial";
                 })
-            }).then(loing),
-            webSocketInit: (c) => webSocketInit(c).then(() => {
-                set(s => {
+            }),
+            webSocketInit: async (c) => {
+                await webSocketInit(c);
+                req = async (...op) => {
+                    const [api, ...info] = op;
+                    console.log({ "req": "webSocketObj.send", api, info })
+                    webSocketObj.send(JSON.stringify({ api, info }))
+                };
+                await self().req("api_globalConfig_get")
+                await loingGlobalConfig();
+                set(async s => {
                     s.ipc.name = "webSocket";
                 })
-            }).then(() => req("api_globalConfig_get")).then(loing),
-            // ipcSet:async()=>{}
+            },
         },
         res,
-        req: async (...op) => {
-            const [api, ...info] = op;
-            console.log("req", { api, info })
-            req(...op);
-        },
+        req: (...op) => req(...op),
         state: globalConfig
     }
 }))

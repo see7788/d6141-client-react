@@ -23,7 +23,7 @@ import {
     FormOutlined
 } from '@ant-design/icons';
 export const BYTYPENAMES={
-    '自然顺序':0, '用途顺序':2
+    '添加顺序':0, '用途顺序':2
 } as const
 const App: FC<{byType?:number}> = ({byType=0}) => {
     const ybl = store(s => s.state.ybl);

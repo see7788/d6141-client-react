@@ -46,7 +46,9 @@ const Def: FC = () => {
                     description: "持久保存配置"
                 }
             ]}
-        />{Pages}</>;
+        />
+        {Pages}
+        </>;
 
 }
 

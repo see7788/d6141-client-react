@@ -4,10 +4,6 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Tag, InputRef, Input, Tooltip, Space, theme } from 'antd';
 const App: FC = () => {
     const tags = store(s => s.state.ybl.doTypes);
-    const setTags = (newTags: string[]) => store.setState(s => {
-        s.state.ybl.doTypes = newTags;
-        s.req('api_config_set', "ybl", s.state.ybl)
-    })
     const { token } = theme.useToken();
     const [inputVisible, setInputVisible] = useState(false);
     const [inputValue, setInputValue] = useState('');
@@ -15,7 +11,10 @@ const App: FC = () => {
     const [editInputValue, setEditInputValue] = useState('');
     const inputRef = useRef<InputRef>(null);
     const editInputRef = useRef<InputRef>(null);
-
+    const setTags = (newTags: string[]) => store.setState(s => {
+        s.state.ybl.doTypes = newTags;
+        s.req('api_config_set', "ybl", s.state.ybl)
+    })
     useEffect(() => {
         if (inputVisible) {
             inputRef.current?.focus();
@@ -89,13 +88,16 @@ const App: FC = () => {
                             />
                         );
                     }
-                    const isLongTag = tag.length > 20;
+                    const tagmaxLenght=10
+                    const isLongTag = tag.length > tagmaxLenght;
+                    const closable=dbUseIng.indexOf(index)==-1//&&tags.length>0
                     const tagElem = (
                         <Tag
                             key={tag}
-                            closable={dbUseIng.indexOf(index)==-1}
+                            closable={closable}
                             style={{ userSelect: 'none' }}
                             onClose={() => handleClose(tag)}
+                            // onClick={console.log}
                         >
                             <span
                                 onDoubleClick={(e) => {
@@ -106,7 +108,7 @@ const App: FC = () => {
                                     }
                                 }}
                             >
-                                {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                                {isLongTag ? `${tag.slice(0, tagmaxLenght-1)}...` : tag}
                             </span>
                         </Tag>
                     );

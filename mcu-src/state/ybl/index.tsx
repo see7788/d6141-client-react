@@ -29,7 +29,7 @@ const UiaddState: FC = () => {
             <Row>
                 <Db byType={byType} />
             </Row>
-            <Descriptions.Item label="抗干扰">
+            <Descriptions.Item label="干扰">
                 <Switch
                     style={cssArr[Number(addDb)]}
                     checkedChildren="允许新增传感器"
@@ -45,9 +45,12 @@ const UiaddState: FC = () => {
                     onChange={byTypeSet}
                 />
             </Descriptions.Item>
-            <Descriptions.Item label="用途">
+            <Descriptions.Item label="用途删增">
                 <DoTypes />
-            </Descriptions.Item>
+            </Descriptions.Item> 
+            {/* <Descriptions.Item label="用途修改">
+                <DoTypes />
+            </Descriptions.Item> */}
         </Descriptions>
     )
 }

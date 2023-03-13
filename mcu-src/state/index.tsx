@@ -13,42 +13,25 @@ const App = () => {
     return (
         <>
             <FloatButton
-                // icon={<FileTextOutlined />}
-                description="复原"
-                shape="square"//形状
-                //type="primary"
-                style={{ right: 20 }}
-                onClick={c => {
-                    useStore.setState(s => {
-                        s.req("api_globalConfig_fromFile")
-                    });
-                }}
-            />
-            <FloatButton
-                // icon={<FileTextOutlined />}
-                description="放弃重启"
-                shape="square"//形状
-                //type="primary"
-                style={{ right: 70 }}
-                onClick={c => {
-                    useStore.setState(s => {
-                        s.req("api_espRestart")
-                    });
-                }}
-            />
-            <FloatButton
-                //icon={<FileTextOutlined />}
                 description="保存重启"
                 shape="square"
-                //type="primary"
-                style={{ right: 120 }}
+                style={{ right: 70 }}
                 onClick={c => {
                     useStore.setState(s => {
                         s.req("api_globalConfig_toFile")
                     });
                 }}
             />
-            <ExclamationCircleOutlined />
+            <FloatButton
+                description="放弃重启"
+                shape="square"
+                style={{ right: 20 }}
+                onClick={c => {
+                    useStore.setState(s => {
+                        s.req("api_espRestart")
+                    });
+                }}
+            />
             <Collapse
                 bordered={false}
                 defaultActiveKey={['1']}
