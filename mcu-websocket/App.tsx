@@ -1,10 +1,10 @@
 import React from 'react';
 import store from "../mcu-src/useStore"
-import useUrlFrom from '../mcu-src/ipc/webSocket/useWsUriToker';
 import App from "../mcu-src/index"
+const wsUri="ws://192.168.110.142/ws"
+store.getState().ipc.webSocketInit(wsUri)
 export default () => {
-  //console.log(`ws://${window.location.hostname}/ws`)
-  const { msg } = useUrlFrom("wsUri=ws://192.168.110.172/ws")
-  const workIng = store(s => s.ipc.globalConfig)
+  const msg="连接中"
+  const workIng = store(s => s.ipc.state[1])
   return <>{workIng ? <App /> : msg}</>
 }
